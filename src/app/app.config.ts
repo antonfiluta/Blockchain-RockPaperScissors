@@ -7,7 +7,7 @@ import {
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { MessageService } from 'primeng/api';
-import { ThemeStore } from '@shared/ui/theme.store';
+import { ThemeStore } from '@shared/stores/theme.store';
 
 export const appConfig: ApplicationConfig = {
   providers: [

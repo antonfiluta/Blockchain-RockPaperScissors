@@ -1,1 +1,248 @@
-<app-background> </app-background>
+<app-background>
+  <p-toast position="top-right"></p-toast>
+
+  <div
+    class="relative z-10 flex min-h-screen flex-col items-center px-4 py-10 md:px-10"
+  >
+    <header
+      class="dark:bg-surface-900/40 dark:border-surface-700/50 mb-8 flex w-full max-w-6xl flex-col items-center justify-between gap-4 rounded-3xl border border-white/50 bg-white/40 p-4 shadow-lg backdrop-blur-md md:flex-row"
+    >
+      <h1 class="text-surface-900 dark:text-surface-0 text-3xl font-bold">
+        ✊✋✌️ Web3 Игра
+      </h1>
+
+      <div class="flex items-center gap-4">
+        @if (!account) {
+          <p-button
+            label="Подключить MetaMask"
+            icon="pi pi-wallet"
+            (onClick)="connect()"
+            severity="primary"
+            styleClass="rounded-xl"
+          ></p-button>
+        } @else {
+          <div class="flex flex-col text-right text-sm">
+            <span class="text-surface-700 dark:text-surface-300 font-mono"
+              >{{ account.slice(0, 6) }}...{{ account.slice(-4) }}</span
+            >
+            <span class="text-primary-600 dark:text-primary-400 font-bold"
+              >{{ ethBalance }} ETH</span
+            >
+          </div>
+        }
+      </div>
+    </header>
+
+    <main class="grid w-full max-w-6xl grid-cols-1 gap-6 lg:grid-cols-3">
+      <div class="flex flex-col gap-6 lg:col-span-2">
+        <div
+          class="dark:bg-surface-900/50 dark:border-surface-700/60 rounded-3xl border border-white/60 bg-white/50 p-6 shadow-xl backdrop-blur-xl md:p-8"
+        >
+          <h2
+            class="text-surface-800 dark:text-surface-100 mb-6 text-xl font-bold"
+          >
+            Сделайте свой ход
+          </h2>
+
+          <div class="mb-6 grid grid-cols-3 gap-4">
+            <button
+              (click)="selectChoice(0)"
+              [class]="
+                selectedChoice === 0
+                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30 scale-105'
+                  : 'dark:bg-surface-800/30 border-transparent bg-white/30 hover:bg-white/50'
+              "
+              class="flex flex-col items-center justify-center rounded-2xl border-2 p-4 shadow-sm transition-all duration-200"
+            >
+              <span class="mb-2 text-4xl">✊</span>
+              <span class="text-sm font-medium">Камень</span>
+            </button>
+            <button
+              (click)="selectChoice(1)"
+              [class]="
+                selectedChoice === 1
+                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30 scale-105'
+                  : 'dark:bg-surface-800/30 border-transparent bg-white/30 hover:bg-white/50'
+              "
+              class="flex flex-col items-center justify-center rounded-2xl border-2 p-4 shadow-sm transition-all duration-200"
+            >
+              <span class="mb-2 text-4xl">✋</span>
+              <span class="text-sm font-medium">Бумага</span>
+            </button>
+            <button
+              (click)="selectChoice(2)"
+              [class]="
+                selectedChoice === 2
+                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/30 scale-105'
+                  : 'dark:bg-surface-800/30 border-transparent bg-white/30 hover:bg-white/50'
+              "
+              class="flex flex-col items-center justify-center rounded-2xl border-2 p-4 shadow-sm transition-all duration-200"
+            >
+              <span class="mb-2 text-4xl">✌️</span>
+              <span class="text-sm font-medium">Ножницы</span>
+            </button>
+          </div>
+
+          <div class="mb-6">
+            <div class="mb-2 block text-sm font-medium">Сумма ставки (ETH)</div>
+            <div class="mb-3 flex gap-2">
+              <p-inputNumber
+                [(ngModel)]="betAmount"
+                [min]="0.001"
+                [maxFractionDigits]="4"
+                mode="decimal"
+                styleClass="w-full"
+                inputStyleClass="w-full rounded-xl bg-white/50 dark:bg-surface-800/50 border-white/50 dark:border-surface-700"
+              ></p-inputNumber>
+            </div>
+            <div class="flex gap-2">
+              @for (amount of quickBets; track amount) {
+                <button
+                  (click)="setQuickBet(amount)"
+                  class="dark:bg-surface-800/40 hover:bg-primary-100 dark:hover:bg-primary-900/50 rounded-lg bg-white/40 px-3 py-1 text-xs transition-colors"
+                >
+                  {{ amount }} ETH
+                </button>
+              }
+            </div>
+          </div>
+
+          <p-button
+            label="Играть!"
+            icon="pi pi-play"
+            [loading]="isPlaying"
+            [disabled]="!account || selectedChoice === null"
+            (onClick)="play()"
+            styleClass="w-full rounded-xl py-3 font-bold text-lg shadow-primary-500/30"
+          ></p-button>
+        </div>
+
+        @if (gameResult) {
+          <div
+            class="animate-fade-in rounded-3xl border p-6 shadow-lg backdrop-blur-xl transition-all"
+            [class]="
+              gameResult.outcome === 'Player Wins'
+                ? 'border-green-500/30 bg-green-500/10'
+                : gameResult.outcome === 'Computer Wins'
+                  ? 'border-red-500/30 bg-red-500/10'
+                  : 'border-yellow-500/30 bg-yellow-500/10'
+            "
+          >
+            <h3 class="mb-4 text-lg font-bold">Результат игры</h3>
+            <div class="flex items-center justify-between text-center">
+              <div class="flex flex-col">
+                <span class="mb-1 text-3xl">{{
+                  gameResult.playerMove.split(' ')[0]
+                }}</span
+                ><span class="text-sm">Вы</span>
+              </div>
+              <div class="text-surface-400 text-2xl font-black">VS</div>
+              <div class="flex flex-col">
+                <span class="mb-1 text-3xl">{{
+                  gameResult.computerMove.split(' ')[0]
+                }}</span
+                ><span class="text-sm">Контракт</span>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <p class="text-xl font-bold">{{ gameResult.outcome }}</p>
+              <p class="text-sm opacity-80">
+                Выплата: {{ gameResult.payout }} ETH
+              </p>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="flex flex-col gap-6">
+        <div
+          class="dark:bg-surface-900/50 dark:border-surface-700/60 rounded-3xl border border-white/60 bg-white/50 p-6 shadow-xl backdrop-blur-xl"
+        >
+          <h3 class="mb-4 flex items-center gap-2 text-lg font-bold">
+            <i class="pi pi-globe text-primary-500"></i> Мировая статистика
+          </h3>
+          <div class="mb-2 flex justify-between">
+            <span class="text-surface-600 dark:text-surface-400"
+              >Всего игр:</span
+            >
+            <span class="font-bold">{{ globalStats.games }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-surface-600 dark:text-surface-400"
+              >Всего ставок:</span
+            >
+            <span class="font-bold">{{ globalStats.wagered }} ETH</span>
+          </div>
+        </div>
+
+        <div
+          class="dark:bg-surface-900/50 dark:border-surface-700/60 rounded-3xl border border-white/60 bg-white/50 p-6 shadow-xl backdrop-blur-xl"
+        >
+          <h3 class="mb-4 flex items-center gap-2 text-lg font-bold">
+            <i class="pi pi-user text-primary-500"></i> Ваша статистика
+          </h3>
+          <div class="grid grid-cols-2 gap-3 text-center">
+            <div class="rounded-xl bg-green-100/50 p-2 dark:bg-green-900/20">
+              <span class="block text-xs text-green-700 dark:text-green-400"
+                >Победы</span
+              ><span class="text-lg font-bold">{{ userStats.wins }}</span>
+            </div>
+            <div class="rounded-xl bg-red-100/50 p-2 dark:bg-red-900/20">
+              <span class="block text-xs text-red-700 dark:text-red-400"
+                >Поражения</span
+              ><span class="text-lg font-bold">{{ userStats.losses }}</span>
+            </div>
+            <div class="rounded-xl bg-gray-100/50 p-2 dark:bg-gray-800/50">
+              <span class="block text-xs text-gray-600 dark:text-gray-400"
+                >Ничьи</span
+              ><span class="text-lg font-bold">{{ userStats.draws }}</span>
+            </div>
+            <div
+              class="bg-primary-100/50 dark:bg-primary-900/20 rounded-xl p-2"
+            >
+              <span class="text-primary-700 dark:text-primary-400 block text-xs"
+                >Профит</span
+              ><span class="text-lg font-bold"
+                >{{ userStats.profit | number: '1.2-4' }} ETH</span
+              >
+            </div>
+          </div>
+          <div class="mt-3 text-center text-sm font-medium">
+            🔥 Серия побед: {{ userStats.streak }}
+          </div>
+        </div>
+
+        <div
+          class="dark:bg-surface-900/50 dark:border-surface-700/60 flex-1 rounded-3xl border border-white/60 bg-white/50 p-6 shadow-xl backdrop-blur-xl"
+        >
+          <h3 class="mb-4 flex items-center gap-2 text-lg font-bold">
+            <i class="pi pi-bolt text-primary-500"></i> Лента игр
+          </h3>
+          <ul class="space-y-3">
+            @for (item of activityFeed; track $index) {
+              <li
+                class="dark:bg-surface-800/30 flex items-center justify-between rounded-lg bg-white/30 p-2 text-xs"
+              >
+                <span class="text-surface-500 font-mono">{{
+                  item.player
+                }}</span>
+                <span
+                  [class]="
+                    item.outcome === 'Player Wins'
+                      ? 'text-green-500'
+                      : 'text-red-500'
+                  "
+                  >{{ item.outcome }}</span
+                >
+              </li>
+            } @empty {
+              <li class="text-surface-400 text-center text-xs">
+                Нет недавних игр
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    </main>
+  </div>
+</app-background>

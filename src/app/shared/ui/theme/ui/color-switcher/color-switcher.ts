@@ -4,7 +4,7 @@ import { Component, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { PopoverModule } from 'primeng/popover';
 import { ColorButton } from '@shared/ui/color-button/color-button';
-import { ThemeStore } from '@shared/ui/theme.store';
+import { ThemeStore } from '@shared/stores/theme.store';
 import {
   PRIMARY_COLORS,
   SURFACE_COLORS,

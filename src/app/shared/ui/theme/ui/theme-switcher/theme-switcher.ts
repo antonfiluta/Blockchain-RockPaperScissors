@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { ThemeStore } from '@shared/ui/theme.store';
+import { ThemeStore } from '@shared/stores/theme.store';
 import { ButtonModule } from 'primeng/button';
 import { ThemeMode } from '../../models/theme.model';
 

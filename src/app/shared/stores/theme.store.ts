@@ -19,8 +19,8 @@ import {
   withState,
 } from '@ngrx/signals';
 import { updatePreset, updateSurfacePalette } from '@primeuix/themes';
-import { isThemeState } from './theme/utils/type.guards';
-import { createPalette } from './theme/utils/palette.builder';
+import { isThemeState } from '@shared/ui/theme/utils/type.guards';
+import { createPalette } from '@shared/ui/theme/utils/palette.builder';
 
 export const initialThemeState: ThemeState = {
   mode: ThemeMode.System,
