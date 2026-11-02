@@ -1,0 +1,72 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    /* Базовые настройки путей и вывода */
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+
+    /* Строгие проверки (Strict Mode) */
+    "strict": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "useUnknownInCatchVariables": true,
+
+    /* Окружение и модули (Настройки для Angular 17+) */
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+
+    "module": "preserve",
+    "moduleResolution": "bundler",
+
+    /* Пути для абсолютных импортов (Алиасы) */
+    "paths": {
+      "@core/*": ["./src/app/core/*"],
+      "@shared/*": ["./src/app/shared/*"],
+      "@features/*": ["./src/app/features/*"],
+      "@env/*": ["./src/environments/*"]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true,
+    "strictStandalone": true,
+    "fullTemplateTypeCheck": true,
+    "disableTypeScriptVersionCheck": true,
+    "extendedDiagnostics": {
+      "defaultCategory": "error",
+      "checks": {
+        "optionalChainNotNullable": "suppress",
+        "nullishCoalescingNotNullable": "suppress",
+        "suffixNotSupported": "warning",
+        "textAttributeNotBinding": "warning",
+        "invalidBananaInBox": "error",
+        "missingControlFlowDirective": "error",
+        "missingNgForOfLet": "error",
+        "controlFlowPreventingContentProjection": "error",
+        "unusedStandaloneImports": "warning"
+      }
+    }
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
+}

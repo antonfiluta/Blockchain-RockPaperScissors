@@ -1,0 +1,45 @@
+<button
+  #trigger
+  pPopover="colorPanel"
+  type="button"
+  pButton
+  icon="pi pi-palette text-lg!"
+  rounded
+  (click)="colorPanel.toggle($event)"
+>
+  <span class="sr-only">Открыть палитру цветов</span>
+</button>
+
+<p-popover #colorPanel>
+  <div class="w-64 pb-2">
+    <div class="flex flex-col gap-4">
+      <div>
+        <span class="text-muted-color text-sm font-semibold">Primary</span>
+        <div class="flex flex-wrap justify-start gap-2 pt-2">
+          @for (primaryColor of primaryColors; track primaryColor) {
+            <app-color-button
+              [title]="primaryColor"
+              [isPicked]="primaryColor === store.primary()"
+              [backgroundColor]="'var(--p-' + primaryColor + '-500)'"
+              (setColor)="setPrimary(primaryColor)"
+            ></app-color-button>
+          }
+        </div>
+      </div>
+
+      <div>
+        <span class="text-muted-color text-sm font-semibold">Surface</span>
+        <div class="flex flex-wrap justify-start gap-2 pt-2">
+          @for (surfaceColor of surfaceColors; track surfaceColor) {
+            <app-color-button
+              [title]="surfaceColor"
+              [isPicked]="surfaceColor === store.surface()"
+              [backgroundColor]="surfacePalettes[surfaceColor][500]"
+              (setColor)="setSurface(surfaceColor)"
+            ></app-color-button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</p-popover>

@@ -1,0 +1,16 @@
+<div
+  class="dark:from-surface-950 dark:to-surface-900 from-surface-300 to-surface-200 relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-linear-to-br"
+>
+  <div class="absolute right-5 bottom-5 z-10 hidden items-center gap-4 md:flex">
+    <app-theme-switcher></app-theme-switcher>
+    <app-color-switcher></app-color-switcher>
+  </div>
+  <div
+    class="dark:bg-primary-200/30 bg-primary-500/70 absolute -top-40 -right-40 h-80 w-80 rounded-full blur-3xl"
+  ></div>
+  <div
+    class="dark:bg-primary-200/20 bg-primary-500/60 absolute -bottom-40 -left-40 h-80 w-80 rounded-full blur-3xl"
+  ></div>
+
+  <ng-content></ng-content>
+</div>
